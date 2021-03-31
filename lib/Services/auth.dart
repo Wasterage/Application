@@ -3,6 +3,7 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:wasterage/Models/user.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Auth {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -40,10 +41,14 @@ class Auth {
   }
 
   setUserInfo(UserCust usr) async {
-    await databaseReference.child(usr.email).set({
-      'name': usr.name,
-      'phone': usr.email,
-      'role': usr.role
-    });
+    return await FirebaseFirestore.instance.collection(usr.role)
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .set({
+        'name': usr.name,
+        'email': usr.email,
+        'phone': usr.phone
+      })
+      .then((value) => print("User Added"))
+      .catchError((error) => print("Failed to add user: $error"));
   }
 }
