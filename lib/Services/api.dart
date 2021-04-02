@@ -4,7 +4,7 @@ import 'package:wasterage/Models/bin.dart';
 import 'package:wasterage/const.dart';
 
 getAllBins() async {
-  Uri url = Uri.parse("http://13.90.116.39:8080/Bin");
+  Uri url = Uri.parse(server + "/Bin");
   Response response = await get(
     url,
     headers: {"Accept": "application/json", "Connection": "Keep-Alive"},
