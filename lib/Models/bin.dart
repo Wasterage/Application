@@ -12,4 +12,12 @@ class Bin{
     cord = LatLng(json["latitude"], json["longitude"]);
     filled = json["level"] == 1 ? true : false;
   }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data["latitude"] = this.cord.latitude;
+    data["longitude"] = this.cord.longitude;
+    data["level"] = 0;
+    return data;
+  }
 }

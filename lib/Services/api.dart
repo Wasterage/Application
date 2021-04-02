@@ -17,3 +17,18 @@ getAllBins() async {
   }
   return ret;
 }
+
+addBin(Bin bin) async {
+  print(jsonEncode(bin.toJson()));
+  Uri url = Uri.parse(server + "/Bin");
+  Response response = await post(
+    url,
+    headers: {
+      "accept": "*/*",
+      'Content-Type': "application/json"
+    },
+    body: jsonEncode(bin.toJson())
+  );
+  print(response.body);
+  return response.body;
+}
