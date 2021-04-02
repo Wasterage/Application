@@ -5,3 +5,4 @@ void navigateToPush(BuildContext context, Widget destination) {
 }
 
 const mapBoxKey = "";
+String server = "http://13.90.116.39:8080";

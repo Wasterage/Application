@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   MapboxMapController mapController;
   LatLng myPos;
   bool loading = true;
+  List<Bin> bins;
 
   void initState() {
     super.initState();
@@ -26,8 +27,10 @@ class _HomeState extends State<Home> {
 
   init() async {
     LatLng temp = await acquireCurrentLocation();
+    List<Bin> curr = await getAllBins();
     setState(() {
       myPos = temp; 
+      bins = curr;
       loading = false;
     });
   }
