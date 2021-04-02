@@ -62,6 +62,14 @@ class _HomeState extends State<Home> {
     setState(() {
       mapController = controller;      
     });
+    for(Bin bin in bins) {
+      mapController.addSymbol(
+        SymbolOptions(
+          geometry: bin.cord,
+          iconImage: "cemetery-15",
+        )
+      );
+    }
   }
 
   @override
