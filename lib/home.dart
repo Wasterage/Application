@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:wasterage/Models/bin.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/const.dart';
-import 'package:location/location.dart';
+import 'package:wasterage/utility.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,29 +32,6 @@ class _HomeState extends State<Home> {
       loading = false;
     });
   }
-
-  Future<LatLng> acquireCurrentLocation() async {
-    Location location = new Location();
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
-    }
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
-    final locationData = await location.getLocation();
-    return LatLng(locationData.latitude, locationData.longitude);
-  }
-
 
   void _onMapCreated(MapboxMapController controller) {
     setState(() {
