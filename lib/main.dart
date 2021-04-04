@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wasterage/home.dart';
 import 'package:wasterage/login.dart';
-import 'package:wasterage/userInfo.dart';
+import 'package:wasterage/userType.dart';
 
 void main() {
   runApp(MyApp());
@@ -57,7 +57,7 @@ class _WasterageState extends State<Wasterage> {
             color: Colors.red,
             size: 20,
           )
-        ) : login ? Home() : Login(),
+        ) : login ? Home() : UserType(),
       ),
     );
   }
