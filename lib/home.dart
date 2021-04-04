@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:wasterage/Models/bin.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/addBin.dart';
 import 'package:wasterage/const.dart';
 import 'package:wasterage/utility.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
@@ -14,11 +15,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  MapboxMapController mapController;
+  Completer<GoogleMapController> _controller = Completer();
   LatLng myPos;
   bool loading = true;
-  List<Bin> bins;
   double w,h;
+  Set<Marker> markers = new Set();
 
   void initState() {
     super.initState();
@@ -30,24 +31,21 @@ class _HomeState extends State<Home> {
     List<Bin> curr = await getAllBins();
     setState(() {
       myPos = temp; 
-      bins = curr;
-      loading = false;
     });
-  }
-
-  void _onMapCreated(MapboxMapController controller) {
-    setState(() {
-      mapController = controller;      
-    });
-    for(Bin bin in bins) {
-      mapController.addSymbol(
-        SymbolOptions(
-          geometry: bin.cord,
-          iconImage: "cemetery-15",
-          iconSize: 2
-        )
+    for(Bin bin in curr) {
+      Marker m = new Marker(
+        markerId: MarkerId(bin.id.toString()), 
+        position: bin.cord,
+        onTap: () {
+          print(bin.id);
+        },
+        icon: await BitmapDescriptor.fromAssetImage(createLocalImageConfiguration(context), 'assets/images/marker.png')
       );
+      markers.add(m);
     }
+    setState(() {
+      loading = false;      
+    });
   }
 
   @override
@@ -108,14 +106,26 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      body: MapboxMap(
-        accessToken: mapBoxKey,
-        onMapCreated: _onMapCreated,
+      body: GoogleMap(
+        mapType: MapType.normal,
         initialCameraPosition: new CameraPosition(
           target: myPos,
-          zoom: 15.0,
+          zoom: 15
         ),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        markers: markers,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _goToTheLake,
+        child: Icon(Icons.my_location),
       ),
     );
+  }
+
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: await acquireCurrentLocation(), zoom: 15)));
   }
 }

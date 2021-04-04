@@ -1,4 +1,4 @@
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Bin{
   int id;

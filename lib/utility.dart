@@ -1,5 +1,5 @@
 import 'package:location/location.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 Future<LatLng> acquireCurrentLocation() async {
   Location location = new Location();
