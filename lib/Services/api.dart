@@ -56,7 +56,7 @@ createUser(User user) async {
   return response.body;
 }
 
-login(User user) async {
+Future<String> login(User user) async {
   String endPoint = server;
   if(user.role == "Driver") {
     endPoint += "/Driver";
@@ -71,9 +71,16 @@ login(User user) async {
     headers: {"Accept": "application/json", "Connection": "Keep-Alive"},
   );
   dynamic data = json.decode(response.body);
-  if(data == true)
-    setUser(user.email);
-  print(data);
+  if(data["exists"] == 1) {
+    if(data["valid"] == true) {
+      setUser(user.email);
+      return "";
+    }
+    else if(data["valid"] == false) {
+      return "Please check your credentials";
+    }
+  }
+  return "Account does not exists";
 }
 
 setUser(String email) async {
