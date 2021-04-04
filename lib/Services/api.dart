@@ -85,5 +85,8 @@ Future<String> login(User user) async {
 
 setUser(String email) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString("email", email);
+  if(email != "")
+    prefs.setString("email", email);
+  else
+    prefs.remove("email");
 }

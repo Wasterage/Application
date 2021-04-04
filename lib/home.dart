@@ -4,6 +4,8 @@ import 'package:wasterage/Models/bin.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/addBin.dart';
 import 'package:wasterage/const.dart';
+import 'package:wasterage/main.dart';
+import 'package:wasterage/userType.dart';
 import 'package:wasterage/utility.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -80,27 +82,57 @@ class _HomeState extends State<Home> {
               child: Image.asset("assets/images/logo.png"),
             ),
             Container(
-              height: 0.7 * MediaQuery.of(context).size.height,
+              height: 0.60 * MediaQuery.of(context).size.height,
               child: Column(
                 children: [
-                  GestureDetector(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle, size: 30),
-                        Text(" Add Bin",
-                          style: TextStyle(
-                            fontSize: 18
-                          ),
+                  FloatingActionButton.extended(
+                    onPressed: () {
+                      navigateTo(context, AddBin());
+                    }, 
+                    label: Text("Add Bin"),
+                    icon: Icon(Icons.add_circle),
+                    backgroundColor: Colors.green,
+                  ),
+                ],
+              )
+            ),
+            FloatingActionButton.extended(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Do you really want to logout?"),
+                      actions: [
+                        TextButton(
+                          child: Text("No"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        TextButton(
+                          child: Text("Yes"),
+                          onPressed: () async {
+                            await setUser("");
+                            navigateToPush(context, UserType());
+                          },
                         )
                       ],
-                    ),
-                    onTap: () {
-                      navigateTo(context, AddBin());
-                    },
-                  )
-                ],
+                    );
+                  }
+                );
+              }, 
+              label: Text("Logout", style: TextStyle(fontSize: 16, color: Colors.black)),
+              icon: Icon(Icons.exit_to_app, size: 40, color: Colors.black,),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text("v1.0 Made with ❤️ by Ozone",
+                style: TextStyle(
+                  color: Colors.grey
+                ),
               )
             )
           ],
