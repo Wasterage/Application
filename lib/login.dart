@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:wasterage/Services/auth.dart';
+import 'package:wasterage/Models/user.dart';
+import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/const.dart';
 import 'package:wasterage/home.dart';
 import 'package:wasterage/userInfo.dart';
 
 class Login extends StatefulWidget {
+  final String role;
+
+  Login({this.role});
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
   
-  Auth auth = new Auth();
+  User user = new User();
   bool newUser = false;
   String email;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      user.role = widget.role;      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +45,23 @@ class _LoginState extends State<Login> {
         return null;
       },
       onLogin: (loginData) {
-        return auth.signIn(loginData);
+        setState(() {
+          user.email = loginData.name;
+          user.password = loginData.password;          
+        });
+        return login(user);
       },
       onSignup: (loginData) {
         setState(() {
-          newUser = true;  
-          email = loginData.name;        
+          user.email = loginData.name;
+          user.password = loginData.password;        
         });
-        return auth.createAccount(loginData);
+        navigateToPush(context, UserInfo(user: user));
+        return;
       },
       loginAfterSignUp: true,
       onSubmitAnimationCompleted: () {
-        newUser ? navigateToPush(context, UserInfo(email: email)): navigateToPush(context, Home()); 
+        navigateToPush(context, Home()); 
       },
       hideForgotPasswordButton: true,
       onRecoverPassword: null,

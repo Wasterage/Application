@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wasterage/Models/bin.dart';
+import 'package:wasterage/Models/user.dart';
 import 'package:wasterage/const.dart';
 
 getAllBins() async {
@@ -31,4 +33,50 @@ addBin(Bin bin) async {
   );
   print(response.body);
   return response.body;
+}
+
+createUser(User user) async {
+  String endPoint = server;
+  if(user.role == "Driver") {
+    endPoint += "/Driver";
+  } else {
+    endPoint += "/Citizen";
+  }
+  Uri url = Uri.parse(endPoint);
+  Response response = await post(
+    url,
+    headers: {
+      "accept": "*/*",
+      'Content-Type': "application/json"
+    },
+    body: jsonEncode(user.toJson())
+  );
+  setUser(user.email);
+  print(response.body);
+  return response.body;
+}
+
+login(User user) async {
+  String endPoint = server;
+  if(user.role == "Driver") {
+    endPoint += "/Driver";
+  } else {
+    endPoint += "/Citizen";
+  }
+  endPoint += ("/"+user.email);
+  endPoint += ("/"+user.password);
+  Uri url = Uri.parse(endPoint);
+  Response response = await get(
+    url,
+    headers: {"Accept": "application/json", "Connection": "Keep-Alive"},
+  );
+  dynamic data = json.decode(response.body);
+  if(data == true)
+    setUser(user.email);
+  print(data);
+}
+
+setUser(String email) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString("email", email);
 }

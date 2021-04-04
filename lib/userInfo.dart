@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:wasterage/Models/user.dart';
-import 'package:wasterage/Services/auth.dart';
+import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/const.dart';
 import 'package:wasterage/home.dart';
 
 class UserInfo extends StatefulWidget {
-  String email;
+  final User user;
 
-  UserInfo({this.email});
+  UserInfo({this.user});
   @override
   _UserInfoState createState() => _UserInfoState();
 }
 
 class _UserInfoState extends State<UserInfo> {
 
-  UserCust usr = new UserCust();
-  Auth auth = new Auth();
+  User user;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      user = widget.user;      
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +44,11 @@ class _UserInfoState extends State<UserInfo> {
                   children: [
                     inputField("Name", Icon(Icons.person)),
                     inputField("Phone", Icon(Icons.phone)),
-                    inputField("Role", Icon(Icons.work)),
                     RaisedButton(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       color: Colors.blue,
                       onPressed: () async {
-                        setState(() {
-                          usr.email = widget.email;                          
-                        });
-                        await auth.setUserInfo(usr);
+                        await createUser(user);
                         navigateToPush(context, Home());
                       }, 
                       child: Text("Next", 
@@ -90,12 +93,10 @@ class _UserInfoState extends State<UserInfo> {
         ),
         onChanged: (value) {
           if(title == "Name") {
-            usr.name = value;
+            user.name = value;
           } else if(title == "Phone") {
-            usr.phone = value;
-          } else if(title == "Role") {
-            usr.role = value;
-          }
+            user.phone = value;
+          } 
         },
       )
     );
