@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:wasterage/Models/bin.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/addBin.dart';
 import 'package:wasterage/const.dart';
-import 'package:wasterage/main.dart';
 import 'package:wasterage/userType.dart';
 import 'package:wasterage/utility.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
+import 'dart:convert';
 
 class Home extends StatefulWidget {
   @override
@@ -22,6 +23,8 @@ class _HomeState extends State<Home> {
   bool loading = true;
   double w,h;
   Set<Marker> markers = new Set();
+  Set<Polyline> _polyline = {};
+  List<LatLng> cor = [];
 
   void initState() {
     super.initState();
@@ -45,9 +48,27 @@ class _HomeState extends State<Home> {
       );
       markers.add(m);
     }
+    await readJson();
+    _polyline.add(Polyline(
+        polylineId: PolylineId('line1'),
+        visible: true,
+        //latlng is List<LatLng>
+        points: cor,
+        width: 2,
+        color: Colors.blue,
+      ));
     setState(() {
       loading = false;      
     });
+  }
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/json/coordinates.json');
+    dynamic data = await json.decode(response)["coordinates"];
+    for(int i=0;i<data.length;i++) {
+      cor.add(new LatLng(data[i]["latitude"], data[i]["longitude"]));
+    }
+    print(cor);
   }
 
   @override
@@ -148,6 +169,7 @@ class _HomeState extends State<Home> {
           _controller.complete(controller);
         },
         markers: markers,
+        polylines: _polyline,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _goToTheLake,
