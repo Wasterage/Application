@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wasterage/Models/user.dart';
-import 'package:wasterage/Services/api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wasterage/const.dart';
-import 'package:wasterage/home.dart';
 import 'package:wasterage/login.dart';
 
 class UserType extends StatefulWidget {
@@ -15,6 +13,13 @@ class _UserTypeState extends State<UserType> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  SharedPreferences preferences;
+
+  init() async {
+    preferences = await SharedPreferences.getInstance();
   }
 
   @override
@@ -40,6 +45,7 @@ class _UserTypeState extends State<UserType> {
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 50),
                       color: Colors.blue,
                       onPressed: () async {
+                        await preferences.setString("Role", "Driver");
                         navigateToPush(context, Login(role: "Driver",));
                       }, 
                       child: Text("Driver", 
@@ -58,6 +64,7 @@ class _UserTypeState extends State<UserType> {
                       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 45),
                       color: Colors.blue,
                       onPressed: () async {
+                        await preferences.setString("Role", "Citizen");
                         navigateToPush(context, Login(role: "Citizen",));
                       }, 
                       child: Text("Citizen", 
