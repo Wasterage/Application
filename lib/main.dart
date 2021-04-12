@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wasterage/driverHome.dart';
 import 'package:wasterage/home.dart';
 import 'package:wasterage/login.dart';
 import 'package:wasterage/userType.dart';
@@ -24,7 +25,7 @@ class Wasterage extends StatefulWidget {
 }
 
 class _WasterageState extends State<Wasterage> {
-  bool loading = true, login = false;
+  bool login = false, citizen = false;
 
   void initState() {
     super.initState();
@@ -38,6 +39,7 @@ class _WasterageState extends State<Wasterage> {
         login = true;        
       });
     }
+    citizen = preferences.getString("Role") == "Citizen";
   }
 
   @override
@@ -46,12 +48,7 @@ class _WasterageState extends State<Wasterage> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Colors.white,
-        body: loading ? Center(
-            child: SpinKitWanderingCubes(
-            color: Colors.red,
-            size: 20,
-          )
-        ) : login ? Home() : UserType(),
+        body:  login ? (citizen ? Home() : DriverHome()) : UserType(),
       ),
     );
   }
