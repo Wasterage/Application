@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,11 +29,6 @@ class _WasterageState extends State<Wasterage> {
   void initState() {
     super.initState();
     init();
-    Firebase.initializeApp().whenComplete(() {
-      setState(() {
-        loading = false;
-      });
-    });
   }
 
   init() async {
