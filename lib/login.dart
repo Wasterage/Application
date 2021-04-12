@@ -3,6 +3,7 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:wasterage/Models/user.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/const.dart';
+import 'package:wasterage/driverHome.dart';
 import 'package:wasterage/home.dart';
 import 'package:wasterage/userInfo.dart';
 
@@ -61,7 +62,7 @@ class _LoginState extends State<Login> {
       },
       loginAfterSignUp: true,
       onSubmitAnimationCompleted: () {
-        navigateToPush(context, Home()); 
+        navigateToPush(context, widget.role == "Citizen" ? Home() : DriverHome()); 
       },
       hideForgotPasswordButton: true,
       onRecoverPassword: null,

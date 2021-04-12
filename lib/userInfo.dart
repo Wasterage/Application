@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wasterage/Models/user.dart';
 import 'package:wasterage/Services/api.dart';
 import 'package:wasterage/const.dart';
+import 'package:wasterage/driverHome.dart';
 import 'package:wasterage/home.dart';
 
 class UserInfo extends StatefulWidget {
@@ -49,7 +50,7 @@ class _UserInfoState extends State<UserInfo> {
                       color: Colors.blue,
                       onPressed: () async {
                         await createUser(user);
-                        navigateToPush(context, Home());
+                        navigateToPush(context, user.role == "Citizen" ? Home() : DriverHome());
                       }, 
                       child: Text("Next", 
                         style: TextStyle(
